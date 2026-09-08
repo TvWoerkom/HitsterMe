@@ -40,8 +40,19 @@ async function fetchAccessToken(authorizationCode) {
     if (data.access_token) {
       console.log('Spotify Access Token:', data.access_token);
 
+      // Fetch and log the current user's info
+      const userResponse = await fetch('https://api.spotify.com/v1/me', {
+        headers: {
+          'Authorization': `Bearer ${data.access_token}`,
+        },
+      });
+
+      const userData = await userResponse.json();
+      console.log('User Email:', userData.email);
+      console.log('User Display Name:', userData.display_name);
+
       // Display success message
-      displayMessage('Token fetched successfully! You can now proceed.', 'success');
+      displayMessage(`Token fetched successfully! Logged in as: ${userData.display_name} (${userData.email})`, 'success');
 
       // Make "Next" button visible
       nextButton.style.display = 'inline-block';
