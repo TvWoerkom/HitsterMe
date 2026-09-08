@@ -1,6 +1,6 @@
 const CLIENT_ID = '7e18eee0dbaa4e999f89166eae57cca1';
 const CLIENT_SECRET = 'd2fd4f72b0a1440f8685b99c52a5c0df';
-const REDIRECT_URI = 'https://tvwoerkom.github.io/'; // Ensure this matches the one in your Spotify Developer Dashboard
+const REDIRECT_URI = 'https://tvwoerkom.github.io/HitsterMe'; // Ensure this matches the one in your Spotify Developer Dashboard
 const SCOPES = 'user-library-read user-read-playback-state user-modify-playback-state';
 
 // Base64 Encode the Client ID and Secret for client credentials flow (if needed)
