@@ -102,7 +102,9 @@ function displayMessage(message, type) {
 function playSpotifyTrack(spotifyURI, accessToken) {
   console.log('Opening Spotify URI:', spotifyURI);
   // Open the Spotify URI - this will launch the Spotify app if installed
-  window.location.href = spotifyURI;
+  if (spotifyURI.startsWith('spotify:')) {
+    window.open(spotifyURI);
+  }
 }
 
 // Store the current Spotify URI globally for play/pause/restart controls
@@ -116,11 +118,11 @@ function getCurrentSpotifyURI() {
   return currentSpotifyURI;
 }
 
-// Event listeners
-document.getElementById('getTokenBtn').addEventListener('click', redirectToSpotifyLogin);
-document.getElementById('nextBtn').addEventListener('click', () => {
- window.location.href = 'qr_coding.html';
-});
+// Event listeners (only add if elements exist)
+const getTokenBtn = document.getElementById('getTokenBtn');
+if (getTokenBtn) {
+  getTokenBtn.addEventListener('click', redirectToSpotifyLogin);
+}
 
 // Handle redirect when the user is sent back from Spotify login
 if (window.location.href.includes('code=')) {
