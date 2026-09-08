@@ -56,7 +56,7 @@ async function fetchAccessToken(authorizationCode) {
       console.log('User Display Name:', userData.display_name);
 
       // Display success message
-      displayMessage(`Token fetched successfully! Logged in as: ${userData.display_name} (${userData.email})`, 'success');
+      displayMessage(`Token fetched successfully! Logged in as: ${userData.display_name}`, 'success');
 
       // Make "Next" button visible
       nextButton.style.display = 'inline-block';
