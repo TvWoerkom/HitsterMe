@@ -19,7 +19,7 @@ async function fetchAccessToken(authorizationCode) {
 
   try {
     const response = await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',/
+      method: 'POST',
       headers: {
         'Authorization': `Basic ${encodedCredentials}`,
         'Content-Type': 'application/x-www-form-urlencoded',

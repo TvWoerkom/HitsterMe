@@ -3,9 +3,9 @@ from flask import Flask, render_template
 import os
 
 # Get the parent directory (project root)
-template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
-app = Flask(__name__, template_folder=template_dir)
+app = Flask(__name__, template_folder=root_dir, static_folder=root_dir, static_url_path='')
 
 @app.route('/')
 def hello():
