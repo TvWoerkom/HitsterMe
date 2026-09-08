@@ -4,73 +4,135 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Camera Feed with QR Code Scanner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-   body {
+    * {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, #4B0082, #4CAF50); /* Zacht kleurverloop */
-      height: 100vh;
+      padding: 0;
+      box-sizing: border-box;
     }
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    
     h1 {
       text-align: center;
+      margin: 20px 0;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1db954;
     }
+    
     #camera-container {
       width: 85%;
       max-width: 600px;
-      margin: 20px auto;
-      border: 5px solid #4CAF50;
+      border: 5px solid #1db954;
       border-radius: 10px;
       padding: 10px;
-      background-color: #f9f9f9;
+      background-color: #1a1a1a;
+      margin: 20px auto;
     }
+    
     video {
       width: 100%;
       border-radius: 5px;
+      display: block;
     }
+    
     #message {
-      color: red;
+      color: #1ed760;
       font-size: 18px;
       text-align: center;
       display: none;
+      margin: 20px 0;
+      font-weight: 600;
     }
+    
     #loading-message {
       text-align: center;
       font-size: 18px;
+      color: #1db954;
     }
+    
     .button {
       display: none;
       position: absolute;
-      padding: 10px;
-      margin: 20px auto;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
+      padding: 14px 28px;
+      background: #000;
+      color: #1db954;
+      border: 2px solid #000;
       cursor: pointer;
       text-align: center;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
     }
+    
     .button:hover {
-      background-color: #45a049;
+      background: #1db954;
+      color: #000;
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(29, 185, 84, 0.3);
     }
+    
     #next-button {
       top: 80%;
       transform: translateX(-50%);
       left: 50%;
     }
+    
     #play-pause-btn {
       top: 50%;
       transform: translateX(-30%);
       left: 30%;
     }
+    
     #restart-btn {
       top: 50%;
       transform: translateX(-70%);
       left: 70%;
     }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.4rem;
+      }
+      
+      #camera-container {
+        width: 90%;
+      }
+      
+      #play-pause-btn {
+        top: 60%;
+        left: 25%;
+      }
+      
+      #restart-btn {
+        top: 60%;
+        left: 75%;
+      }
+      
+      #next-button {
+        top: 85%;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <h1 id = "h1">Scan a QRcode to start the song</h1>
+  <h1 id = "h1">Scan a QR code to start the song</h1>
 
   <div id="camera-container">
     <video id="camera-feed" autoplay></video>
@@ -79,12 +141,11 @@
   <div id="message"></div>
 
   <!-- Music Controls -->
-  <button id="play-pause-btn" class="button">Pause</button>
-  <button id="restart-btn" class="button">Restart</button>
+  <button id="play-pause-btn" class="button">▶ Play</button>
+  <button id="restart-btn" class="button">↻ Restart</button>
   
   <!-- Next Button -->
-  
-  <button id="next-button" class="button"" onclick="startNextScan()">Next</button>
+  <button id="next-button" class="button" onclick="startNextScan()">Next</button>
 
   <!-- Include QR Code Scanner -->
   <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
