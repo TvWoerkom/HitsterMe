@@ -1,59 +1,45 @@
 // Replace with your Spotify Access Token
 const accessToken = localStorage.getItem('spotify_token');
 
-// Define the base URL for Spotify's playback API
-const spotifyApiBaseUrl = 'https://api.spotify.com/v1/me/player';
-
-// Function to make API calls to Spotify
-async function spotifyApiRequest(endpoint, method = 'GET', body = null) {
-    const options = {
-        method,
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        },
-        body: body ? JSON.stringify(body) : null
-    };
-
-    const response = await fetch(`${spotifyApiBaseUrl}${endpoint}`, options);
-    if (!response.ok) {
-        console.error(`Spotify API error: ${response.status}`, await response.json());
-    }
-    return response;
-}
-
-// Play or resume playback
+// Play or resume playback - Open Spotify URI to start playing
 async function playTrack() {
-    await spotifyApiRequest('/play', 'PUT');
-    console.log('Playback started/resumed.');
+    const uri = getCurrentSpotifyURI();
+    if (uri) {
+        window.location.href = uri;
+        console.log('Opened Spotify URI for playback.');
+    } else {
+        alert('No song selected. Please scan a QR code first.');
+    }
 }
 
-// Pause playback
+// Pause playback - Show message to use Spotify app
 async function pauseTrack() {
-    await spotifyApiRequest('/pause', 'PUT');
-    console.log('Playback paused.');
+    alert('Please use your Spotify app to pause playback.');
+    console.log('Use Spotify app to pause.');
 }
 
-// Restart the currently playing track
+// Restart the currently playing track - Open the same URI again
 async function restartTrack() {
-    await spotifyApiRequest('/seek?position_ms=0', 'PUT');
-    console.log('Track restarted.');
+    const uri = getCurrentSpotifyURI();
+    if (uri) {
+        window.location.href = uri;
+        console.log('Restarted track by opening Spotify URI again.');
+    } else {
+        alert('No song selected. Please scan a QR code first.');
+    }
 }
 
 // Event listeners for buttons
 document.getElementById('play-pause-btn').addEventListener('click', async () => {
     const playPauseBtn = document.getElementById('play-pause-btn');
 
-    // Check current playback state
-    const playbackState = await spotifyApiRequest('', 'GET').then(res => res.json());
-    const isPlaying = playbackState.is_playing;
-
-    if (isPlaying) {
-        await pauseTrack();
-        playPauseBtn.textContent = 'Play';
-    } else {
+    // Toggle between play and pause messages
+    if (playPauseBtn.textContent === 'Play') {
         await playTrack();
         playPauseBtn.textContent = 'Pause';
+    } else {
+        await pauseTrack();
+        playPauseBtn.textContent = 'Play';
     }
 });
 

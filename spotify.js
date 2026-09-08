@@ -41,24 +41,35 @@ async function fetchAccessToken(authorizationCode) {
       console.log('Spotify Access Token:', data.access_token);
 
       // Fetch and log the current user's info
-      const userResponse = await fetch('https://api.spotify.com/v1/me', {
-        headers: {
-          'Authorization': `Bearer ${data.access_token}`,
-        },
-      });
+      try {
+        const userResponse = await fetch('https://api.spotify.com/v1/me', {
+          headers: {
+            'Authorization': `Bearer ${data.access_token}`,
+          },
+        });
 
-      const userData = await userResponse.json();
-      console.log('User Email:', userData.email);
-      console.log('User Display Name:', userData.display_name);
+        if (!userResponse.ok) {
+          throw new Error(`HTTP error! status: ${userResponse.status}`);
+        }
 
-      // Display success message
-      displayMessage(`Token fetched successfully! Logged in as: ${userData.display_name} (${userData.email})`, 'success');
+        const userData = await userResponse.json();
+        console.log('User Email:', userData.email);
+        console.log('User Display Name:', userData.display_name);
 
-      // Make "Next" button visible
-      nextButton.style.display = 'inline-block';
+        // Display success message
+        displayMessage(`Token fetched successfully! Logged in as: ${userData.display_name} (${userData.email})`, 'success');
 
-      // Save the token to local storage (Optional)
-      localStorage.setItem('spotify_token', data.access_token);
+        // Make "Next" button visible
+        nextButton.style.display = 'inline-block';
+
+        // Save the token to local storage (Optional)
+        localStorage.setItem('spotify_token', data.access_token);
+      } catch (userError) {
+        console.error('Error fetching user info:', userError);
+        displayMessage('Token fetched, but couldn\'t retrieve user info. Check console.', 'success');
+        nextButton.style.display = 'inline-block';
+        localStorage.setItem('spotify_token', data.access_token);
+      }
     } else {
       displayMessage('Failed to fetch token. Check the response.', 'error');
     }
@@ -86,6 +97,24 @@ function displayMessage(message, type) {
   const resultElement = document.getElementById('result');
   resultElement.textContent = message;
   resultElement.style.color = type === 'success' ? 'black' : 'red';
+}
+
+// Function to play a Spotify track using deep link (no Premium required)
+function playSpotifyTrack(spotifyURI, accessToken) {
+  console.log('Opening Spotify URI:', spotifyURI);
+  // Open the Spotify URI - this will launch the Spotify app if installed
+  window.location.href = spotifyURI;
+}
+
+// Store the current Spotify URI globally for play/pause/restart controls
+let currentSpotifyURI = null;
+
+function setCurrentSpotifyURI(uri) {
+  currentSpotifyURI = uri;
+}
+
+function getCurrentSpotifyURI() {
+  return currentSpotifyURI;
 }
 
 // Event listeners

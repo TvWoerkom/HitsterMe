@@ -37,11 +37,11 @@ async function scanQRCode(videoElement) {
         if (spotifyURI) {
           console.log('Opening Spotify URI:', spotifyURI);
 
-          // Play the song using Spotify Web API
-          const accessToken = localStorage.getItem('spotify_token');
-          console.log(`Bearer ${accessToken}`);
+          // Store the URI for play/pause/restart controls
+          setCurrentSpotifyURI(spotifyURI);
 
-          playSpotifyTrack(spotifyURI, accessToken);
+          // Open the Spotify URI directly (no Premium required)
+          playSpotifyTrack(spotifyURI, null);
         }
       } else if (isValidURL(code.data)) {
         // For other valid URLs, show a confirmation to the user before opening the link
