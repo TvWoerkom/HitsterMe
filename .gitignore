@@ -11,4 +11,5 @@
 !*.md
 !src/
 !src/**
-
+.gitignore
+.spotify_token_cache.json
