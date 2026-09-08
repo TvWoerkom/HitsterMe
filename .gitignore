@@ -1,18 +1,14 @@
-# Ignore common build and cache directories
-__pycache__/
-*.pyc
-.DS_Store
-.env
-node_modules/
-.vscode/
-*.json.backup
+# Ignore everything in root
+/*
 
-# Keep all project files and docs folder
+# But keep files and folders we need
+!.gitignore
 !*.py
 !*.html
 !*.js
 !*.json
 !*.csv
 !*.md
-!docs/
+!src/
+!src/**
 
