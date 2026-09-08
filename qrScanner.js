@@ -68,7 +68,7 @@ async function scanQRCode(videoElement) {
       nextButton.style.display = 'block';
       nextButton.textContent = 'Next';
       ppButton.style.display = 'block'
-      ppButton.textContent = '⏸ Pause';
+      ppButton.textContent = 'Pause';
       rsButton.style.display = 'block'
 
       videoBorder.style.display = 'none';
