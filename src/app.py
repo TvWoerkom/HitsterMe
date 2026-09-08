@@ -10,10 +10,10 @@ app = Flask(__name__, template_folder=root_dir, static_folder=root_dir, static_u
 @app.route('/')
 def hello():
   return render_template('index.html')
-  
-@app.route("/qr_scanning") 
-def qr_coding(): 
-    return render_template('../qr_coding.html') 
+
+@app.route("/qr_coding")
+def qr_coding():
+    return render_template('qr_coding.html')
 
 if __name__ == '__main__':
   app.run()
