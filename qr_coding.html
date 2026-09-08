@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Camera Feed with QR Code Scanner</title>
+  <title>QR Code Scanner</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -31,14 +31,19 @@
       color: #1db954;
     }
     
+    .camera-wrapper {
+      width: 100%;
+      max-width: 500px;
+      margin: 20px auto;
+    }
+    
     #camera-container {
-      width: 85%;
-      max-width: 600px;
+      width: 100%;
       border: 5px solid #1db954;
       border-radius: 10px;
       padding: 10px;
       background-color: #1a1a1a;
-      margin: 20px auto;
+      overflow: hidden;
     }
     
     video {
@@ -60,6 +65,14 @@
       text-align: center;
       font-size: 18px;
       color: #1db954;
+    }
+    
+    .controls-container {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      height: 100px;
+      margin: 30px auto;
     }
     
     .button {
@@ -88,21 +101,19 @@
     }
     
     #next-button {
-      top: 80%;
-      transform: translateX(-50%);
+      top: 20px;
       left: 50%;
+      transform: translateX(-50%);
     }
     
     #play-pause-btn {
-      top: 50%;
-      transform: translateX(-30%);
-      left: 30%;
+      top: 20px;
+      left: 10px;
     }
     
     #restart-btn {
-      top: 50%;
-      transform: translateX(-70%);
-      left: 70%;
+      top: 20px;
+      right: 10px;
     }
     
     @media (max-width: 768px) {
@@ -110,42 +121,72 @@
         font-size: 1.4rem;
       }
       
-      #camera-container {
-        width: 90%;
+      .controls-container {
+        height: 120px;
+      }
+      
+      .button {
+        padding: 12px 20px;
+        font-size: 0.8rem;
       }
       
       #play-pause-btn {
-        top: 60%;
-        left: 25%;
+        top: 60px;
       }
       
       #restart-btn {
-        top: 60%;
-        left: 75%;
+        top: 60px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.2rem;
       }
       
-      #next-button {
-        top: 85%;
+      .camera-wrapper {
+        margin: 10px auto;
+      }
+      
+      .controls-container {
+        height: 140px;
+      }
+      
+      .button {
+        padding: 10px 16px;
+        font-size: 0.75rem;
+      }
+      
+      #play-pause-btn {
+        top: 80px;
+        left: 5px;
+      }
+      
+      #restart-btn {
+        top: 80px;
+        right: 5px;
       }
     }
   </style>
 </head>
 <body>
 
-  <h1 id = "h1">Scan a QR code to start the song</h1>
+  <h1 id="h1">Scan a QR Code</h1>
 
-  <div id="camera-container">
-    <video id="camera-feed" autoplay></video>
+  <div class="camera-wrapper">
+    <div id="camera-container">
+      <video id="camera-feed" autoplay></video>
+    </div>
   </div>
 
   <div id="message"></div>
 
   <!-- Music Controls -->
-  <button id="play-pause-btn" class="button">▶ Play</button>
-  <button id="restart-btn" class="button">↻ Restart</button>
-  
-  <!-- Next Button -->
-  <button id="next-button" class="button" onclick="startNextScan()">Next</button>
+  <div class="controls-container">
+    <button id="play-pause-btn" class="button">▶ Play</button>
+    <button id="restart-btn" class="button">↻ Restart</button>
+    <button id="next-button" class="button" onclick="startNextScan()">Next</button>
+  </div>
 
   <!-- Include QR Code Scanner -->
   <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
