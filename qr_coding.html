@@ -3,91 +3,196 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Camera Feed with QR Code Scanner</title>
+  <title>QR Code Scanner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-   body {
+    * {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, #4B0082, #4CAF50); /* Zacht kleurverloop */
-      height: 100vh;
+      padding: 0;
+      box-sizing: border-box;
     }
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    
     h1 {
       text-align: center;
+      margin: 20px 0;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1db954;
     }
-    #camera-container {
-      width: 85%;
-      max-width: 600px;
+    
+    .camera-wrapper {
+      width: 100%;
+      max-width: 500px;
       margin: 20px auto;
-      border: 5px solid #4CAF50;
+    }
+    
+    #camera-container {
+      width: 100%;
+      border: 5px solid #1db954;
       border-radius: 10px;
       padding: 10px;
-      background-color: #f9f9f9;
+      background-color: #1a1a1a;
+      overflow: hidden;
     }
+    
     video {
       width: 100%;
       border-radius: 5px;
+      display: block;
     }
+    
     #message {
-      color: red;
+      color: #1ed760;
       font-size: 18px;
       text-align: center;
       display: none;
+      margin: 20px 0;
+      font-weight: 600;
     }
+    
     #loading-message {
       text-align: center;
       font-size: 18px;
+      color: #1db954;
     }
+    
+    .controls-container {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      height: 100px;
+      margin: 30px auto;
+    }
+    
     .button {
       display: none;
       position: absolute;
-      padding: 10px;
-      margin: 20px auto;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
+      padding: 14px 28px;
+      background: #000;
+      color: #1db954;
+      border: 2px solid #000;
       cursor: pointer;
       text-align: center;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
     }
+    
     .button:hover {
-      background-color: #45a049;
+      background: #1db954;
+      color: #000;
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(29, 185, 84, 0.3);
     }
+    
     #next-button {
-      top: 80%;
-      transform: translateX(-50%);
+      top: 20px;
       left: 50%;
+      transform: translateX(-50%);
     }
+    
     #play-pause-btn {
-      top: 50%;
-      transform: translateX(-30%);
-      left: 30%;
+      top: 20px;
+      left: 10px;
     }
+    
     #restart-btn {
-      top: 50%;
-      transform: translateX(-70%);
-      left: 70%;
+      top: 20px;
+      right: 10px;
+    }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.4rem;
+      }
+      
+      .controls-container {
+        height: 120px;
+      }
+      
+      .button {
+        padding: 12px 20px;
+        font-size: 0.8rem;
+      }
+      
+      #play-pause-btn {
+        top: 60px;
+      }
+      
+      #restart-btn {
+        top: 60px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.2rem;
+      }
+      
+      .camera-wrapper {
+        margin: 10px auto;
+      }
+      
+      .controls-container {
+        height: 140px;
+      }
+      
+      .button {
+        padding: 10px 16px;
+        font-size: 0.75rem;
+      }
+      
+      #play-pause-btn {
+        top: 80px;
+        left: 5px;
+      }
+      
+      #restart-btn {
+        top: 80px;
+        right: 5px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1 id = "h1">Scan a QRcode to start the song</h1>
+  <h1 id="h1">Scan a QR Code</h1>
 
-  <div id="camera-container">
-    <video id="camera-feed" autoplay></video>
+  <div class="camera-wrapper">
+    <div id="camera-container">
+      <video id="camera-feed" autoplay></video>
+    </div>
   </div>
 
   <div id="message"></div>
 
   <!-- Music Controls -->
-  <button id="play-pause-btn" class="button">Pause</button>
-  <button id="restart-btn" class="button">Restart</button>
-  
-  <!-- Next Button -->
-  
-  <button id="next-button" class="button"" onclick="startNextScan()">Next</button>
+  <div class="controls-container">
+    <button id="play-pause-btn" class="button">▶ Play</button>
+    <button id="restart-btn" class="button">↻ Restart</button>
+    <button id="next-button" class="button" onclick="startNextScan()">Next</button>
+  </div>
 
   <!-- Include QR Code Scanner -->
   <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
+  
+  <!-- Include Spotify Functions -->
+  <script src="spotify.js"></script>
   
   <!-- Include Camera Feed and QR Code Scanner Logic -->
   <script src="camera.js"></script>

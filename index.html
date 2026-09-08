@@ -3,47 +3,117 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify API Token Generator</title>
+  <title>Spotify API Token Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-   body {
+    * {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, #4B0082, #4CAF50); /* Zacht kleurverloop */
-      height: 100vh;
+      padding: 0;
+      box-sizing: border-box;
     }
-    h1 {
-      text-align: center;
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
     }
-    #container {
+    
+    .container {
+      max-width: 500px;
       width: 100%;
-      max-width: 600px;
-      margin: 20px auto;
+      background: linear-gradient(135deg, #1db954 0%, #1ed760 100%);
+      border-radius: 20px;
+      padding: 50px 30px;
+      box-shadow: 0 20px 60px rgba(29, 185, 84, 0.3);
       text-align: center;
     }
+    
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+      color: #000;
+    }
+    
+    .subtitle {
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 0.95rem;
+      margin-bottom: 40px;
+    }
+    
+    #result {
+      color: #000;
+      font-size: 0.95rem;
+      margin: 20px 0;
+      font-weight: 600;
+      min-height: 30px;
+    }
+    
+    .buttons-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      flex-direction: column;
+    }
+    
     button {
-      padding: 10px 20px;
-      background-color: #1DB954;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
+      padding: 15px 30px;
+      background: #000;
+      color: #1db954;
+      border: 2px solid #000;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 700;
       cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
+    
     button:hover {
-      background-color: #1ed760;
+      background: #1db954;
+      color: #000;
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     }
+    
     #nextBtn {
-      margin-top: 20px;
       display: none;
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 35px 20px;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      button {
+        padding: 12px 24px;
+        font-size: 0.85rem;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Please login to Spotify to get started</h1>
-  <div id="container">
-    <button id="getTokenBtn">Login here</button>
-    <div id="result"></div>
-    <button id="nextBtn" onclick="window.location.href = '{{url_for('qr_coding')}}';">Go to QR Code Scanner</button>
+  <div class="container">
+    <h1>Login to Spotify</h1>
+    <p class="subtitle">Get started with Hitster Me</p>
+    
+    <div class="buttons-group">
+      <button id="getTokenBtn">Login Here</button>
+      <div id="result"></div>
+      <button id="nextBtn" onclick="window.location.href = '/qr_scanning';">Go to QR Scanner</button>
+    </div>
   </div>
 
   <script src="spotify.js"></script>
