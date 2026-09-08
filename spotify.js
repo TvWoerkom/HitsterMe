@@ -1,15 +1,14 @@
 const CLIENT_ID = '7e18eee0dbaa4e999f89166eae57cca1';
 const CLIENT_SECRET = 'd2fd4f72b0a1440f8685b99c52a5c0df';
-
-const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
-const REDIRECT_URI = isLocalHost
-  ? `${window.location.origin}/callback`
-  : `${window.location.origin}${window.location.pathname}`;
-
 const SCOPES = 'user-library-read user-read-playback-state user-modify-playback-state';
+const REDIRECT_URI = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
+  ? 'http://127.0.0.1:5000/callback'
+  : 'https://tvwoerkom.github.io/HitsterMe';
 
 // Base64 Encode the Client ID and Secret for client credentials flow (if needed)
 const encodedCredentials = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
+
+// Step 1: Redirect to Spotify Login
 
 // Step 1: Redirect to Spotify Login
 function redirectToSpotifyLogin() {
@@ -46,34 +45,24 @@ async function fetchAccessToken(authorizationCode) {
       console.log('Spotify Access Token:', data.access_token);
 
       // Fetch and log the current user's info
-      try {
-        const userResponse = await fetch('https://api.spotify.com/v1/me', {
-          headers: {
-            'Authorization': `Bearer ${data.access_token}`,
-          },
-        });
+      const userResponse = await fetch('https://api.spotify.com/v1/me', {
+        headers: {
+          'Authorization': `Bearer ${data.access_token}`,
+        },
+      });
 
-        if (!userResponse.ok) {
-          throw new Error(`HTTP error! status: ${userResponse.status}`);
-        }
+      const userData = await userResponse.json();
+      console.log('User Email:', userData.email);
+      console.log('User Display Name:', userData.display_name);
 
-        const userData = await userResponse.json();
-        console.log('User Display Name:', userData.display_name);
+      // Display success message
+      displayMessage(`Token fetched successfully! Logged in as: ${userData.display_name} (${userData.email})`, 'success');
 
-        // Display success message
-        displayMessage(`Token fetched successfully! Logged in as: ${userData.display_name}`, 'success');
+      // Make "Next" button visible
+      nextButton.style.display = 'inline-block';
 
-        // Make "Next" button visible
-        nextButton.style.display = 'inline-block';
-
-        // Save the token to local storage (Optional)
-        localStorage.setItem('spotify_token', data.access_token);
-      } catch (userError) {
-        console.error('Error fetching user info:', userError);
-        displayMessage('Token fetched, but couldn\'t retrieve user info. Check console.', 'success');
-        nextButton.style.display = 'inline-block';
-        localStorage.setItem('spotify_token', data.access_token);
-      }
+      // Save the token to local storage (Optional)
+      localStorage.setItem('spotify_token', data.access_token);
     } else {
       displayMessage('Failed to fetch token. Check the response.', 'error');
     }
@@ -103,37 +92,11 @@ function displayMessage(message, type) {
   resultElement.style.color = type === 'success' ? 'black' : 'red';
 }
 
-// Function to play a Spotify track using deep link (no Premium required)
-function playSpotifyTrack(spotifyURI, accessToken) {
-  console.log('Opening Spotify URI in background:', spotifyURI);
-  // Open the Spotify URI in a background tab so the current app stays in front
-  if (spotifyURI.startsWith('spotify:')) {
-    const newWin = window.open('', '_blank');
-    if (newWin) {
-      newWin.opener = null;
-      newWin.location.href = spotifyURI;
-    } else {
-      window.location.href = spotifyURI;
-    }
-  }
-}
-
-// Store the current Spotify URI globally for play/pause/restart controls
-let currentSpotifyURI = null;
-
-function setCurrentSpotifyURI(uri) {
-  currentSpotifyURI = uri;
-}
-
-function getCurrentSpotifyURI() {
-  return currentSpotifyURI;
-}
-
-// Event listeners (only add if elements exist)
-const getTokenBtn = document.getElementById('getTokenBtn');
-if (getTokenBtn) {
-  getTokenBtn.addEventListener('click', redirectToSpotifyLogin);
-}
+// Event listeners
+document.getElementById('getTokenBtn').addEventListener('click', redirectToSpotifyLogin);
+document.getElementById('nextBtn').addEventListener('click', () => {
+ window.location.href = 'qr_coding.html';
+});
 
 // Handle redirect when the user is sent back from Spotify login
 if (window.location.href.includes('code=')) {

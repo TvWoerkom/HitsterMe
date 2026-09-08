@@ -1,57 +1,59 @@
 // Replace with your Spotify Access Token
 const accessToken = localStorage.getItem('spotify_token');
 
-// Play or resume playback - Open Spotify URI to start playing
+// Define the base URL for Spotify's playback API
+const spotifyApiBaseUrl = 'https://api.spotify.com/v1/me/player';
+
+// Function to make API calls to Spotify
+async function spotifyApiRequest(endpoint, method = 'GET', body = null) {
+    const options = {
+        method,
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        },
+        body: body ? JSON.stringify(body) : null
+    };
+
+    const response = await fetch(`${spotifyApiBaseUrl}${endpoint}`, options);
+    if (!response.ok) {
+        console.error(`Spotify API error: ${response.status}`, await response.json());
+    }
+    return response;
+}
+
+// Play or resume playback
 async function playTrack() {
-    const uri = getCurrentSpotifyURI();
-    if (uri) {
-        const newWin = window.open('', '_blank');
-        if (newWin) {
-            newWin.opener = null;
-            newWin.location.href = uri;
-        } else {
-            window.location.href = uri;
-        }
-        console.log('Opened Spotify URI for playback in background.');
-    } else {
-        alert('No song selected. Please scan a QR code first.');
-    }
+    await spotifyApiRequest('/play', 'PUT');
+    console.log('Playback started/resumed.');
 }
 
-// Pause playback - Show message to use Spotify app
+// Pause playback
 async function pauseTrack() {
-    alert('Please use your Spotify app to pause playback.');
-    console.log('Use Spotify app to pause.');
+    await spotifyApiRequest('/pause', 'PUT');
+    console.log('Playback paused.');
 }
 
-// Restart the currently playing track - Open the same URI again
+// Restart the currently playing track
 async function restartTrack() {
-    const uri = getCurrentSpotifyURI();
-    if (uri) {
-        const newWin = window.open('', '_blank');
-        if (newWin) {
-            newWin.opener = null;
-            newWin.location.href = uri;
-        } else {
-            window.location.href = uri;
-        }
-        console.log('Restarted track by opening Spotify URI again in background.');
-    } else {
-        alert('No song selected. Please scan a QR code first.');
-    }
+    await spotifyApiRequest('/seek?position_ms=0', 'PUT');
+    console.log('Track restarted.');
 }
 
 // Event listeners for buttons
 document.getElementById('play-pause-btn').addEventListener('click', async () => {
     const playPauseBtn = document.getElementById('play-pause-btn');
 
-    // Toggle between play and pause messages
-    if (playPauseBtn.textContent === 'Play') {
-        await playTrack();
-        playPauseBtn.textContent = 'Pause';
-    } else {
+    // Check current playback state
+    const playbackState = await spotifyApiRequest('', 'GET').then(res => res.json());
+    const isPlaying = playbackState.is_playing;
+
+    if (isPlaying) {
         await pauseTrack();
         playPauseBtn.textContent = 'Play';
+    } else {
+        await playTrack();
+        playPauseBtn.textContent = 'Pause';
     }
 });
 

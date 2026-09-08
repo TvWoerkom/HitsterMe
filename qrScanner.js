@@ -37,11 +37,11 @@ async function scanQRCode(videoElement) {
         if (spotifyURI) {
           console.log('Opening Spotify URI:', spotifyURI);
 
-          // Store the URI for play/pause/restart controls
-          setCurrentSpotifyURI(spotifyURI);
+          // Play the song using Spotify Web API
+          const accessToken = localStorage.getItem('spotify_token');
+          console.log(`Bearer ${accessToken}`);
 
-          // Open the Spotify URI directly (no Premium required)
-          playSpotifyTrack(spotifyURI, null);
+          playSpotifyTrack(spotifyURI, accessToken);
         }
       } else if (isValidURL(code.data)) {
         // For other valid URLs, show a confirmation to the user before opening the link
@@ -118,6 +118,68 @@ function isValidURL(string) {
     return true; // If successful, the string is a valid URL
   } catch (error) {
     return false; // If it fails, the string is not a valid URL
+  }
+}
+
+// Function to play a Spotify track using the Web API
+async function playSpotifyTrack(spotifyTrackURI, accessToken, position = 0) {
+  const devicesUrl = 'https://api.spotify.com/v1/me/player/devices';
+  const playUrl = 'https://api.spotify.com/v1/me/player/play';
+
+  try {
+    // Step 1: Fetch available devices
+    const devicesResponse = await fetch(devicesUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!devicesResponse.ok) {
+      console.error('Error fetching devices:', await devicesResponse.json());
+      return;
+    }
+
+    const devicesData = await devicesResponse.json();
+    const devices = devicesData.devices;
+
+    if (devices.length === 0) {
+      console.error('No available devices found.');
+      return;
+    }
+
+    // Step 2: Select a device (for example, the first one)
+    const targetDevice = devices[0];
+    console.log(`Using device: ${targetDevice.name} (${targetDevice.id})`);
+
+    // Step 3: Prepare the play request payload
+	const payload = {
+    uris: [spotifyTrackURI]  // Dynamically set the track URI
+	//uris: ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh"]
+    };
+    //const payload = {
+    //  uris: [spotifyTrackURI], // Use the provided track URI
+    // position_ms: position,   // Start position in milliseconds (default is 0)
+    //};
+
+    // Step 4: Play the track on the selected device
+    const playResponse = await fetch(`${playUrl}?device_id=${targetDevice.id}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (playResponse.ok) {
+      console.log('Track is playing successfully on device:', targetDevice.name);
+    } else {
+      const errorData = await playResponse.json();
+      console.error('Error playing track:', errorData);
+    }
+  } catch (error) {
+    console.error('Network error:', error);
   }
 }
 
