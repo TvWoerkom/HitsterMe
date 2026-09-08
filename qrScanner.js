@@ -66,7 +66,9 @@ async function scanQRCode(videoElement) {
 
       // Show the "Next" button
       nextButton.style.display = 'block';
+      nextButton.textContent = 'Next';
       ppButton.style.display = 'block'
+      ppButton.textContent = '⏸ Pause';
       rsButton.style.display = 'block'
 
       videoBorder.style.display = 'none';
@@ -233,11 +235,12 @@ function startNextScan() {
   videoBorder.style.display = 'block';
   
   nextButton.style.display = 'none';
+  nextButton.textContent = 'Next';
   ppButton.style.display = 'none'
   rsButton.style.display = 'none'
   
   h1.innerText = 'Scan a QRcode to start the song';
-  ppButton.innertext = 'Pause'
+  ppButton.textContent = '▶ Play'
 
   // Restart the camera feed and QR scanning
   showCameraFeed();
