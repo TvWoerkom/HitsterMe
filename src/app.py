@@ -11,11 +11,15 @@ app = Flask(__name__, template_folder=root_dir, static_folder=root_dir, static_u
 def hello():
   return render_template('index.html')
 
-@app.route("/qr_coding")
+@app.route('/callback')
+def callback():
+  return render_template('index.html')
+
+@app.route('/qr_coding')
 def qr_coding():
-    return render_template('qr_coding.html')
+  return render_template('qr_coding.html')
 
 if __name__ == '__main__':
-  app.run()
+  app.run(host='127.0.0.1', port=5000, debug=True)
 
 # %%

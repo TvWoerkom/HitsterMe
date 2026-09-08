@@ -1,6 +1,11 @@
 const CLIENT_ID = '7e18eee0dbaa4e999f89166eae57cca1';
 const CLIENT_SECRET = 'd2fd4f72b0a1440f8685b99c52a5c0df';
-const REDIRECT_URI = 'https://tvwoerkom.github.io/HitsterMe'; // Ensure this matches the one in your Spotify Developer Dashboard
+
+const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+const REDIRECT_URI = isLocalHost
+  ? `${window.location.origin}/callback`
+  : `${window.location.origin}${window.location.pathname}`;
+
 const SCOPES = 'user-library-read user-read-playback-state user-modify-playback-state';
 
 // Base64 Encode the Client ID and Secret for client credentials flow (if needed)
@@ -100,10 +105,16 @@ function displayMessage(message, type) {
 
 // Function to play a Spotify track using deep link (no Premium required)
 function playSpotifyTrack(spotifyURI, accessToken) {
-  console.log('Opening Spotify URI:', spotifyURI);
-  // Open the Spotify URI - this will launch the Spotify app if installed
+  console.log('Opening Spotify URI in background:', spotifyURI);
+  // Open the Spotify URI in a background tab so the current app stays in front
   if (spotifyURI.startsWith('spotify:')) {
-    window.open(spotifyURI);
+    const newWin = window.open('', '_blank');
+    if (newWin) {
+      newWin.opener = null;
+      newWin.location.href = spotifyURI;
+    } else {
+      window.location.href = spotifyURI;
+    }
   }
 }
 

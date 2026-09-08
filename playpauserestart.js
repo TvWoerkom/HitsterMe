@@ -5,8 +5,14 @@ const accessToken = localStorage.getItem('spotify_token');
 async function playTrack() {
     const uri = getCurrentSpotifyURI();
     if (uri) {
-        window.location.href = uri;
-        console.log('Opened Spotify URI for playback.');
+        const newWin = window.open('', '_blank');
+        if (newWin) {
+            newWin.opener = null;
+            newWin.location.href = uri;
+        } else {
+            window.location.href = uri;
+        }
+        console.log('Opened Spotify URI for playback in background.');
     } else {
         alert('No song selected. Please scan a QR code first.');
     }
@@ -22,8 +28,14 @@ async function pauseTrack() {
 async function restartTrack() {
     const uri = getCurrentSpotifyURI();
     if (uri) {
-        window.location.href = uri;
-        console.log('Restarted track by opening Spotify URI again.');
+        const newWin = window.open('', '_blank');
+        if (newWin) {
+            newWin.opener = null;
+            newWin.location.href = uri;
+        } else {
+            window.location.href = uri;
+        }
+        console.log('Restarted track by opening Spotify URI again in background.');
     } else {
         alert('No song selected. Please scan a QR code first.');
     }
